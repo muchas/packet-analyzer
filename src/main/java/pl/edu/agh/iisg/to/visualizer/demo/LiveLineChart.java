@@ -104,5 +104,6 @@ public class LiveLineChart extends Application {
         xAxis.setLowerBound(xSeriesData - MAX_DATA_POINTS > 0 ? xSeriesData - MAX_DATA_POINTS : 0);
         xAxis.setUpperBound(xSeriesData - 1 > MAX_DATA_POINTS ? xSeriesData - 1 : MAX_DATA_POINTS);
         System.out.println(series.getData().size());
+
     }
 }
