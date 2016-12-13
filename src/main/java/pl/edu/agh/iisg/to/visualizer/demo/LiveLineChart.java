@@ -4,11 +4,14 @@ package main.java.pl.edu.agh.iisg.to.visualizer.demo; /**
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.beans.binding.DoubleBinding;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.Random;
@@ -30,6 +33,8 @@ public class LiveLineChart extends Application {
     private NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
     final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
+    ScrollPane scrollPane = new ScrollPane();
+    Pane content = new Pane();
 
     private void init(Stage primaryStage) {
         xAxis.setForceZeroInRange(false);
@@ -42,14 +47,17 @@ public class LiveLineChart extends Application {
         series = new XYChart.Series<Number, Number>();
         lineChart.getData().addAll(series);
         series.setName("Packet Size");
-        primaryStage.setScene(new Scene(lineChart));
+        content.getChildren().add(lineChart);
+        scrollPane.setContent(content);
+        scrollPane.setPrefSize(1500, 800);
+        scrollPane.setPannable(true);
+        primaryStage.setScene(new Scene(scrollPane, 1500, 500));
     }
-
 
     @Override
     public void start(Stage stage) {
         stage.setTitle("Animated Line Chart Sample");
-        stage.setWidth(1500);
+        stage.setWidth(500);
         init(stage);
         stage.show();
 
