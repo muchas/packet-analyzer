@@ -18,8 +18,10 @@ public class DemoStarter {
 //        pieChartSample.printSomething();
 //        pieChartSample.setAmountOfTCP(2000);
 
+
 //        PieChartSample.launch(PieChartSample.class);
 //        BarChartSample.launch(BarChartSample.class);
+
         LiveLineChart.launch(LiveLineChart.class);
 
     }
