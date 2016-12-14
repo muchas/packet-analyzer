@@ -9,7 +9,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 
-public class BarChartSample extends Application {
+public class BarChartSample extends Application implements StatisticChart {
     final static String class1 = "Class A";
     final static String class2 = "Class B";
     final static String class3 = "Class C";
