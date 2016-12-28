@@ -29,6 +29,7 @@ public class App extends Application {
     Button openStatsButton = new Button ("View statistics");
     Button userGuideButton = new Button("User Guide");
     ChoiceBox statisticsChoiseBox = new ChoiceBox(FXCollections.observableArrayList("Size","Protocols","Ports"));
+    File userGuideFile = new File("userGuide.txt");
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -118,28 +119,25 @@ public class App extends Application {
         userGuideButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                File userGuideFile = new File("userGuide.txt");
-                System.out.println(userGuideFile.getAbsolutePath());
+                String userGuideText = "";
+                try(BufferedReader br = new BufferedReader(new FileReader(userGuideFile))) {
+                    StringBuilder sb = new StringBuilder();
+                    String line = br.readLine();
 
-//                String userGuideText = "";
-//                try(BufferedReader br = new BufferedReader(new FileReader(userGuideFile))) {
-//                    StringBuilder sb = new StringBuilder();
-//                    String line = br.readLine();
-//
-//                    while (line != null) {
-//                        sb.append(line);
-//                        sb.append(System.lineSeparator());
-//                        line = br.readLine();
-//                    }
-//                    userGuideText = sb.toString();
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                    while (line != null) {
+                        sb.append(line);
+                        sb.append(System.lineSeparator());
+                        line = br.readLine();
+                    }
+                    userGuideText = sb.toString();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-//                Label userGuideLabel = new Label(userGuideText);
-                Label userGuideLabel = new Label("Tutaj bedzie help");
+                Label userGuideLabel = new Label(userGuideText);
+            //    Label userGuideLabel = new Label("Tutaj bedzie help");
                 userGuideLabel.setFont(new Font("Arial", 14));
                 StackPane secondaryLayout = new StackPane();
                 secondaryLayout.getChildren().add(userGuideLabel);
