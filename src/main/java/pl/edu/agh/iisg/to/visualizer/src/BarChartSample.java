@@ -1,4 +1,4 @@
-package main.java.pl.edu.agh.iisg.to.visualizer; /**
+package main.java.pl.edu.agh.iisg.to.visualizer.src; /**
  * Created by Cinek on 2016-11-30.
  */
 import javafx.application.Application;

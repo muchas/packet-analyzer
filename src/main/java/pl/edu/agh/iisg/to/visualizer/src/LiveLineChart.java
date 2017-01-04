@@ -1,10 +1,9 @@
-package main.java.pl.edu.agh.iisg.to.visualizer; /**
+package main.java.pl.edu.agh.iisg.to.visualizer.src; /**
  * Created by Cinek on 2016-11-30.
  */
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.beans.binding.DoubleBinding;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;

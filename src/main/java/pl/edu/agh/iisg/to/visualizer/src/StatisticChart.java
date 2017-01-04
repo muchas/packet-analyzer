@@ -1,4 +1,4 @@
-package main.java.pl.edu.agh.iisg.to.visualizer;
+package main.java.pl.edu.agh.iisg.to.visualizer.src;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

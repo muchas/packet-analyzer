@@ -1,4 +1,4 @@
-package main.java.pl.edu.agh.iisg.to.visualizer;
+package main.java.pl.edu.agh.iisg.to.visualizer.src;
 
 
 import javafx.application.Application;
@@ -7,8 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.*;
-import javafx.scene.chart.PieChart;
+import javafx.scene.Group;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -16,7 +17,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import java.io.*;
 
 /**
@@ -25,11 +25,11 @@ import java.io.*;
 public class App extends Application {
 
     private String [] tabNames = {"Start", "Realtime Visualization", "Statistics", "Help" };
-    Button realtimeButton = new Button("RealTime Chart");
-    Button openStatsButton = new Button ("View statistics");
-    Button userGuideButton = new Button("User Guide");
-    ChoiceBox statisticsChoiseBox = new ChoiceBox(FXCollections.observableArrayList("Size","Protocols","Ports"));
-    File userGuideFile = new File("userGuide.txt");
+    Button realtimeButton;
+    Button openStatsButton;
+    Button userGuideButton;
+    ChoiceBox statisticsChoiseBox;
+    File userGuideFile;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -44,7 +44,17 @@ public class App extends Application {
     }
 
     @Override
+    public void init(){
+        realtimeButton = new Button("RealTime Chart");
+        openStatsButton = new Button ("View statistics");
+        userGuideButton = new Button("User Guide");
+        statisticsChoiseBox = new ChoiceBox(FXCollections.observableArrayList("Size","Protocols","Ports"));
+        userGuideFile = new File("userGuide.txt");
+
+    }
+    @Override
     public void start(Stage primaryStage) {
+        init();
         primaryStage.setTitle("Packet Analyzer");
         Group root = new Group();
         Scene scene = new Scene(root, 500, 300, Color.DARKGREY);
@@ -137,14 +147,13 @@ public class App extends Application {
                 }
 
                 Label userGuideLabel = new Label(userGuideText);
-            //    Label userGuideLabel = new Label("Tutaj bedzie help");
                 userGuideLabel.setFont(new Font("Arial", 14));
                 StackPane secondaryLayout = new StackPane();
                 secondaryLayout.getChildren().add(userGuideLabel);
 
                 Scene userGuideScene = new Scene(secondaryLayout, 500, 500);
                 Stage userGuideStage = new Stage();
-                userGuideStage.setTitle("New Stage");
+                userGuideStage.setTitle("User Guide");
                 userGuideStage.setScene(userGuideScene);
 
                 userGuideStage.show();
@@ -175,4 +184,5 @@ public class App extends Application {
     private void initStatisticsChoiseBox () {
         statisticsChoiseBox.setTooltip(new Tooltip("Select preferable statistics characteristic"));
     }
+
 }
