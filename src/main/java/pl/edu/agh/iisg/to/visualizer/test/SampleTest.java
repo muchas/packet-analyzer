@@ -3,6 +3,7 @@ package main.java.pl.edu.agh.iisg.to.visualizer.test;
 import com.athaydes.automaton.FXApp;
 import com.athaydes.automaton.FXer;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import main.java.pl.edu.agh.iisg.to.visualizer.src.App;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -45,7 +46,9 @@ public class SampleTest {
         assertThat( user.getAt( Button.class ), hasText( "User Guide" ) );
 
         user.clickOn(matchingAny("type:Button", "text:User Guide") );
-        assertThat( user.getAt( matchingAny("type:Label","text:User Guide") ), hasText( "User Guide" ) );
+        assertThat( user.getAt(TextArea.class),
+                hasText( "This is Sample User Guide.\n\nGot few lines....\n\n... but nothing worth seeing yet.\n" ) );
 
     }
 }
+

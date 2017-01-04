@@ -146,10 +146,10 @@ public class App extends Application {
                     e.printStackTrace();
                 }
 
-                Label userGuideLabel = new Label(userGuideText);
-                userGuideLabel.setFont(new Font("Arial", 14));
+                TextArea userGuideArea = new TextArea(userGuideText);
+                userGuideArea.setFont(new Font("Arial", 14));
                 StackPane secondaryLayout = new StackPane();
-                secondaryLayout.getChildren().add(userGuideLabel);
+                secondaryLayout.getChildren().add(userGuideArea);
 
                 Scene userGuideScene = new Scene(secondaryLayout, 500, 500);
                 Stage userGuideStage = new Stage();
