@@ -2,9 +2,7 @@ package main.java.pl.edu.agh.iisg.to.visualizer.test;
 
 import com.athaydes.automaton.FXApp;
 import com.athaydes.automaton.FXer;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import main.java.pl.edu.agh.iisg.to.visualizer.src.App;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -13,6 +11,7 @@ import org.junit.Test;
 import static com.athaydes.automaton.assertion.AutomatonMatcher.hasText;
 import static com.athaydes.automaton.selector.StringSelectors.matchingAny;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Suota on 2017-01-03.
@@ -54,6 +53,15 @@ public class AppTest {
         user.clickOn(matchingAny("type:Button", "text:User Guide") );
         assertThat( user.getAt(TextArea.class),
                 hasText( "This is Sample User Guide.\n\nGot few lines....\n\n... but nothing worth seeing yet.\n" ) );
+    }
+
+    @Test
+    public void shouldFindChoiceBoxAfterClickOnStatisticsTest() {
+        System.out.println(" Running test ");
+        FXer user = FXer.getUserWith();
+
+        user.clickOn(matchingAny("type:Tab", "text:Statistics"));
+        assertNotNull(user.getAt(ChoiceBox.class));
     }
 }
 
