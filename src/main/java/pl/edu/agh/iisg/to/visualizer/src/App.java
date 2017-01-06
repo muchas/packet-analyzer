@@ -11,9 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -24,12 +22,17 @@ import java.io.*;
  */
 public class App extends Application {
 
+    private Tab getCurrentTab() {
+        return ((Tab)(((TabPane)((BorderPane)root.getChildren().get(0)).getChildren().get(0)).getSelectionModel().getSelectedItem()));
+    }
+
     private String [] tabNames = {"Start", "Realtime Visualization", "Statistics", "Help" };
     Button realtimeButton;
     Button openStatsButton;
     Button userGuideButton;
     ChoiceBox statisticsChoiseBox;
     File userGuideFile;
+    Group root;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -56,7 +59,7 @@ public class App extends Application {
     public void start(Stage primaryStage) {
         init();
         primaryStage.setTitle("Packet Analyzer");
-        Group root = new Group();
+        root = new Group();
         Scene scene = new Scene(root, 500, 300, Color.DARKGREY);
         initComponents(primaryStage);
 
@@ -146,17 +149,24 @@ public class App extends Application {
                     e.printStackTrace();
                 }
 
+                //Creating TextArea with user guide text
                 TextArea userGuideArea = new TextArea(userGuideText);
                 userGuideArea.setFont(new Font("Arial", 14));
-                StackPane secondaryLayout = new StackPane();
-                secondaryLayout.getChildren().add(userGuideArea);
+                userGuideArea.setEditable(false);
 
-                Scene userGuideScene = new Scene(secondaryLayout, 500, 500);
-                Stage userGuideStage = new Stage();
-                userGuideStage.setTitle("User Guide");
-                userGuideStage.setScene(userGuideScene);
+                //Getting User Guide Tab and Hbox that exists in this Tab
+                Tab currentTab = getCurrentTab();
+                HBox currentBox = (HBox)currentTab.getContent();
 
-                userGuideStage.show();
+                //Replacing Button which display help into TextArea with help
+                Button removedButton = (Button)currentBox.getChildren().remove(0);
+                currentBox.getChildren().add(userGuideArea);
+
+                //When another tab is selected TextArea is removed and button is added again
+                currentTab.setOnSelectionChanged(eventOnExit -> {
+                    currentBox.getChildren().remove(0);
+                    currentBox.getChildren().add(removedButton);
+                });
             }
         });
     }
