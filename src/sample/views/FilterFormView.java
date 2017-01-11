@@ -16,11 +16,13 @@ import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
-import sample.*;
+import sample.FilterFileStorage;
+import sample.FilterStorage;
+import sample.FilteringContext;
+import sample.Main;
 import sample.entities.Filter;
 import sample.validators.FilterValidator;
 
-import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Matcher;
@@ -62,16 +64,14 @@ public class FilterFormView extends BaseView {
     );
 
     private static final String sampleCode = String.join("\n", new String[] {
-            "function filter(packet) {",
-            "    /*",
-            "     * multi-line comment",
-            "     */",
-            "     if(packet.getProtocol().getName() === 'tcp') {",
-            "          return true;",
-            "     }",
+            " /*",
+            "  * multi-line comment",
+            "  */",
+            "  if(packet.getProtocol().getName() === 'tcp') {",
+            "     return true;",
+            "  }",
             "",
-            "     return false;",
-            "}"
+            "  return false;",
     });
 
     private TextField nameInput;
@@ -154,48 +154,39 @@ public class FilterFormView extends BaseView {
         nameInput.setPromptText("Filter name");
     }
 
+    private void saveFilter() {
+        Filter filter = new Filter(nameInput.getText(), codeArea.getText());
+        FilterStorage filterStorage = new FilterFileStorage();
+        FilterValidator validator = new FilterValidator(filter, new FilteringContext(filters));
+
+
+        if(validator.validate()) {
+            if(this.instanceIndex >= 0) {
+                this.filters.remove(this.instanceIndex);
+                this.filters.add(this.instanceIndex, filter);
+            } else {
+                this.filters.add(filter);
+            }
+
+            filterStorage.save(filter);
+
+            stage.setScene(parentScene);
+
+        } else {
+            for(String error: validator.getErrors()) {
+                System.out.println(error);
+            }
+        }
+    }
+
     private void initializeButtons() {
         saveButton = new Button();
         saveButton.setText("Zapisz");
-        saveButton.setOnAction(event -> {
-
-            Filter filter = new Filter(nameInput.getText(), codeArea.getText());
-            FilterValidator validator = new FilterValidator(filter, new FilteringContext(filters));
-
-
-            if(validator.validate()) {
-                if(this.instanceIndex >= 0) {
-                    this.filters.remove(this.instanceIndex);
-                    this.filters.add(this.instanceIndex, filter);
-                } else {
-                    this.filters.add(filter);
-                }
-
-                try {
-                    FilterSaver.save(filter);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-                stage.setScene(parentScene);
-
-
-            } else {
-                for(String error: validator.getErrors()) {
-                    System.out.println(error);
-                }
-            }
-        });
+        saveButton.setOnAction(event -> this.saveFilter());
 
         cancelButton = new Button();
         cancelButton.setText("Anuluj");
         cancelButton.setOnAction(event -> stage.setScene(parentScene));
-
-        // walidacja pod katem istnienia odpowiedniego API w JS (funkcja, odpowiednia nazwa)
-
-        // zapisywanie do pliku
-
-        // ladowanie z dysku istniejacych filtrow
 
         // dodanie metod do filtrowania bufora
     }

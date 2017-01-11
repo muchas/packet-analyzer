@@ -14,7 +14,7 @@ public class NotEmptyValueValidator extends BaseValidator {
     @Override
     public boolean validate() {
         if(this.value.trim().equals("")) {
-            errors.add(this.ERROR_MESSAGE);
+            errors.add(NotEmptyValueValidator.ERROR_MESSAGE);
             return false;
         }
         return true;
