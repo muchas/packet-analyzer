@@ -1,6 +1,7 @@
 package sample.entities;
 
 
+import sample.FilteringContext;
 import sample.JavaScriptEngine;
 import sample.Packet;
 
@@ -36,7 +37,7 @@ public class Filter {
         this.name = name;
     }
 
-    public boolean apply(Packet packet) throws ScriptException {
+    public boolean apply(FilteringContext context, Packet packet) throws ScriptException {
         engine.eval(code);
 
         Invocable invocable = (Invocable) engine;
