@@ -2,16 +2,17 @@ package sample.validators;
 
 
 import sample.JavaScriptEngine;
+import sample.Packet;
 
 import javax.script.ScriptException;
 
-public class JavaScriptCodeValidator extends BaseValidator {
+public class JavaScriptFilterCodeValidator extends BaseValidator {
 
     private String functionName;
     private String code;
     private JavaScriptEngine engine;
 
-    public JavaScriptCodeValidator(String functionName, String code, JavaScriptEngine engine) {
+    public JavaScriptFilterCodeValidator(String functionName, String code, JavaScriptEngine engine) {
         this.engine = engine;
         this.functionName = functionName;
         this.code = code;
@@ -21,7 +22,7 @@ public class JavaScriptCodeValidator extends BaseValidator {
     public boolean validate() {
         try {
             engine.eval(code);
-            engine.invokeFunction(functionName);
+            engine.invokeFunction(functionName, getTestPacket());
             return true;
 
         } catch (ScriptException e) {
@@ -32,5 +33,9 @@ public class JavaScriptCodeValidator extends BaseValidator {
         }
 
         return false;
+    }
+
+    private Packet getTestPacket() {
+        return new Packet();
     }
 }

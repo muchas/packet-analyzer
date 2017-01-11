@@ -1,9 +1,14 @@
 package sample.validators;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BaseValidator implements Validator {
+
+    public BaseValidator() {
+        this.errors = new ArrayList<String>();
+    }
 
     protected List<String> errors;
 

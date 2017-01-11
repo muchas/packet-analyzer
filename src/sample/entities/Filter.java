@@ -2,31 +2,37 @@ package sample.entities;
 
 
 import sample.FilteringContext;
-import sample.JavaScriptEngine;
 import sample.Packet;
 
-import javax.script.Invocable;
 import javax.script.ScriptException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class Filter {
     private String id;
     private String name;
-    private String code;
+    private String body;
 
-    private JavaScriptEngine engine;
+    public Filter(String code) {
+        String lines[] = code.split("\\r?\\n");
+
+        String bodyLines[] = Arrays.copyOfRange(lines, 1, Array.getLength(lines));
 
 
-    public Filter(String name, String code) {
+        this.body = String.join("", bodyLines);
+    }
+
+    public Filter(String name, String body) {
         this.name = name;
-        this.code = code;
+        this.body = body;
     }
 
     public String getCode() {
-        return code;
+        return this.addToFunctionScope(body);
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public String getBody() {
+        return body;
     }
 
     public String getName() {
@@ -37,22 +43,29 @@ public class Filter {
         this.name = name;
     }
 
-    public boolean apply(FilteringContext context, Packet packet) throws ScriptException {
-        engine.eval(code);
-
-        Invocable invocable = (Invocable) engine;
-
+    public boolean apply(Packet packet, FilteringContext context) throws ScriptException {
         try {
-            Object result = invocable.invokeFunction("filter", "tcp");
+            Object result = context.getEngine().invokeFunction(name, packet);
+            return (boolean) result;
+
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            return false;
         }
-
-        return true;
     }
 
     @Override
     public String toString() {
         return this.name;
+    }
+
+
+
+    private String addToFunctionScope(String functionBody) {
+        return String.join("\n", new String[] {
+                "function " + name + "(packet) { ",
+                    functionBody,
+                "}"
+        });
     }
 }

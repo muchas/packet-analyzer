@@ -17,8 +17,8 @@ public class JavaScriptEngine {
         engine.eval(code);
     }
 
-    public void invokeFunction(String functionName) throws NoSuchMethodException, ScriptException {
+    public Object invokeFunction(String functionName, Object... args) throws NoSuchMethodException, ScriptException {
         Invocable invocable = (Invocable) engine;
-        invocable.invokeFunction(functionName);
+        return invocable.invokeFunction(functionName, args);
     }
 }

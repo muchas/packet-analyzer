@@ -124,7 +124,7 @@ public class FilterFormView extends BaseView {
 
     private void initializeFields(Filter filter) {
         nameInput.setText(filter.getName());
-        codeArea.insertText(0, filter.getCode());
+        codeArea.insertText(0, filter.getBody());
     }
 
     private void buildScene() {

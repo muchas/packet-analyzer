@@ -11,7 +11,7 @@ public class FilterApplier {
 
         for (Filter filter : activeFilters) {
             try {
-                if (!filter.apply(context, packet)) is_valid = false;
+                if (!filter.apply(packet, context)) is_valid = false;
             } catch (ScriptException e) {
                 e.printStackTrace();
             }

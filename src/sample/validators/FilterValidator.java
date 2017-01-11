@@ -16,7 +16,7 @@ public class FilterValidator extends BaseValidator {
         validators = Arrays.asList(
                 new NotEmptyValueValidator("title", filter.getName()),
                 new NotEmptyValueValidator("codearea", filter.getCode()),
-                new JavaScriptCodeValidator(filter.getName(), filter.getCode(), context.getEngine()) // need to copy here
+                new JavaScriptFilterCodeValidator(filter.getName(), filter.getCode(), context.getEngine()) // need to copy here
         );
     }
 
