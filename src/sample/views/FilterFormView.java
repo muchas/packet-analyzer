@@ -63,16 +63,6 @@ public class FilterFormView extends BaseView {
                     + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
     );
 
-    private static final String sampleCode = String.join("\n", new String[] {
-            " /*",
-            "  * multi-line comment",
-            "  */",
-            "  if(packet.getProtocol().getName() === 'tcp') {",
-            "     return true;",
-            "  }",
-            "",
-            "  return false;",
-    });
 
     private TextField nameInput;
     private CodeArea codeArea;
@@ -104,7 +94,7 @@ public class FilterFormView extends BaseView {
 
         this.buildScene();
 
-        codeArea.replaceText(0, 0, sampleCode);
+        codeArea.replaceText(0, 0, Filter.SAMPLE_CODE);
     }
 
     public FilterFormView(Stage stage, Scene parentScene, ObservableList<Filter> filters, Filter instance, int index) {
@@ -187,8 +177,6 @@ public class FilterFormView extends BaseView {
         cancelButton = new Button();
         cancelButton.setText("Anuluj");
         cancelButton.setOnAction(event -> stage.setScene(parentScene));
-
-        // dodanie metod do filtrowania bufora
     }
 
     private void initializePanes() {

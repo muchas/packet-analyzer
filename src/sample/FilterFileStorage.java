@@ -34,6 +34,11 @@ public class FilterFileStorage implements FilterStorage {
     }
 
     @Override
+    public boolean delete(Filter filter) {
+        return false;
+    }
+
+    @Override
     public List<Filter> loadAll() {
         File folder = new File(directory);
         ArrayList<Filter> filters = new ArrayList<>();

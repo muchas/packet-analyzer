@@ -1,4 +1,4 @@
-package sample.validators;
+package sample.tests;
 
 import org.junit.After;
 import org.junit.Before;
@@ -19,7 +19,17 @@ public class JavaScriptFilterCodeValidatorTest {
     }
 
     @Test
-    public void testIsValid() throws Exception {
+    public void testValidateWithInvalidJavascript() throws Exception {
+
+    }
+
+    @Test
+    public void testValidateWithCallToNotExistingFunction() throws Exception {
+
+    }
+
+    @Test
+    public void testValidateValidCall() throws Exception {
 
     }
 }

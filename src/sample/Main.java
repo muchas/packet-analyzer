@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 import sample.entities.Filter;
 import sample.views.FilterListView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Main extends Application {
 
@@ -17,6 +20,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         ObservableList<Filter> filters = FXCollections.observableArrayList();
+        FilterStorage storage = new FilterFileStorage();
+        List<Filter> existingFilters = storage.loadAll();
+        filters.addAll(existingFilters);
 
         FilterListView listView = new FilterListView(primaryStage, filters);
         primaryStage.setScene(listView.getScene());

@@ -12,7 +12,7 @@ public class FilterValidator extends BaseValidator {
     private List<Validator> validators;
 
     public FilterValidator(Filter filter, FilteringContext context) {
-        errors = new ArrayList<String>();
+        errors = new ArrayList<>();
         validators = Arrays.asList(
                 new NotEmptyValueValidator("title", filter.getName()),
                 new NotEmptyValueValidator("codearea", filter.getCode()),

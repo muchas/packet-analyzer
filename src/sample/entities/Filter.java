@@ -1,25 +1,38 @@
 package sample.entities;
 
 
-import sample.FilteringContext;
-import sample.Packet;
-
-import javax.script.ScriptException;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Filter {
-    private String id;
     private String name;
     private String body;
+
+    private static final Pattern HEADER_PATTERN = Pattern.compile("function (?<NAME>[A-z]+)\\(packet\\)");
+
+    public static final String SAMPLE_CODE = String.join("\n", new String[] {
+            " /*",
+            "  * packet argument is available",
+            "  */",
+            "  if(packet === 'tcp') {",
+            "     return true;",
+            "  }",
+            "",
+            "  return false;",
+    });
+
 
     public Filter(String code) {
         String lines[] = code.split("\\r?\\n");
 
-        String bodyLines[] = Arrays.copyOfRange(lines, 1, Array.getLength(lines));
+        assert Array.getLength(lines) >= 3;
 
+        String bodyLines[] = Arrays.copyOfRange(lines, 1, Array.getLength(lines) - 1);
 
-        this.body = String.join("", bodyLines);
+        this.name = extractFunctionName(lines[0]);
+        this.body = String.join("\n", bodyLines);
     }
 
     public Filter(String name, String body) {
@@ -43,23 +56,20 @@ public class Filter {
         this.name = name;
     }
 
-    public boolean apply(Packet packet, FilteringContext context) throws ScriptException {
-        try {
-            Object result = context.getEngine().invokeFunction(name, packet);
-            return (boolean) result;
-
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     @Override
     public String toString() {
         return this.name;
     }
 
+    private String extractFunctionName(String code) {
+        Matcher matcher = HEADER_PATTERN.matcher(code);
 
+        if(matcher.find()) {
+            return matcher.group("NAME");
+        }
+
+        return "";
+    }
 
     private String addToFunctionScope(String functionBody) {
         return String.join("\n", new String[] {
