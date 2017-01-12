@@ -5,16 +5,23 @@ import sample.entities.Filter;
 import java.util.List;
 
 public class FilterApplier {
-    boolean applyFilters(FilteringContext context, Packet packet, List<Filter> activeFilters) {
-        boolean isValid = true;
 
-        for (Filter filter : activeFilters) {
+    private FilteringContext context;
+    private List<Filter> activeFilters;
+
+    FilterApplier(List<Filter> activeFilters, FilteringContext context) {
+        this.activeFilters = activeFilters;
+        this.context = context;
+    }
+
+    boolean apply(Packet packet) {
+        for (Filter filter: activeFilters) {
             try {
-                if(!context.apply(filter, packet)) isValid = false;
+                if(!context.apply(filter, packet)) return false;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return isValid;
+        return true;
     }
 }
