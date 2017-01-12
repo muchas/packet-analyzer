@@ -1,4 +1,4 @@
-package main.java.pl.edu.agh.iisg.to.visualizer.demo;
+package main.java.pl.edu.agh.iisg.to.visualizer.src;
 /**
  * Created by Cinek on 2016-11-29.
  */
@@ -12,7 +12,7 @@ import javafx.scene.Group;
 
 import java.util.concurrent.CountDownLatch;
 
-public class PieChartSample extends Application {
+public class PieChartSample extends Application implements StatisticChart {
     public static final CountDownLatch latch = new CountDownLatch(1);
     public static PieChartSample pieChartSample = null;
     private int amountOfTCP = 432;

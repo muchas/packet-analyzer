@@ -1,4 +1,4 @@
-package main.java.pl.edu.agh.iisg.to.visualizer.demo; /**
+package main.java.pl.edu.agh.iisg.to.visualizer.src; /**
  * Created by Cinek on 2016-11-30.
  */
 import javafx.application.Application;
@@ -9,7 +9,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 
-public class BarChartSample extends Application {
+public class BarChartSample extends Application implements StatisticChart {
     final static String class1 = "Class A";
     final static String class2 = "Class B";
     final static String class3 = "Class C";
