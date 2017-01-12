@@ -13,6 +13,11 @@ public class FilteringContext {
     private Map<String, Filter> filterMap;
     private JavaScriptEngine engine;
 
+    public FilteringContext() {
+        this.filterMap = new HashMap<>();
+        this.engine = new JavaScriptEngine();
+    }
+
     public FilteringContext(List<Filter> filters) {
         this.filterMap = new HashMap<>();
         this.engine = new JavaScriptEngine();
