@@ -50,6 +50,10 @@ public class FilteringContext {
         }
     }
 
+    public boolean hasFilter(Filter filter) {
+        return filterMap.containsKey(filter.getName());
+    }
+
     public JavaScriptEngine getEngine() {
         return engine;
     }

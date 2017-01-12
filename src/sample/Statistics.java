@@ -7,7 +7,7 @@ import java.util.Map;
 public class Statistics {
 
     public void update(Packet packet) {
-
+        // TODO: implement
     }
 
     public Map<String, String> get() {
