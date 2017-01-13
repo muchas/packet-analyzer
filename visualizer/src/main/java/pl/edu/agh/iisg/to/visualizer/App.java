@@ -1,4 +1,4 @@
-package main.java.pl.edu.agh.iisg.to.visualizer.src;
+package pl.edu.agh.iisg.to.visualizer;
 
 
 import javafx.application.Application;
@@ -16,7 +16,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import java.io.*;
-import java.util.HashMap;
 
 /**
  * Created by Suota on 2016-12-13.
@@ -34,7 +33,6 @@ public class App extends Application {
     ChoiceBox statisticsChoiseBox;
     File userGuideFile;
     Group root;
-    Button stopButton;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -53,9 +51,8 @@ public class App extends Application {
         realtimeButton = new Button("RealTime Chart");
         openStatsButton = new Button ("View statistics");
         userGuideButton = new Button("User Guide");
-        statisticsChoiseBox = new ChoiceBox(FXCollections.observableArrayList("Medium size","Protocols","Destination ports"));
-        userGuideFile = new File("userGuide.txt");
-        stopButton = new Button("STOP");
+        statisticsChoiseBox = new ChoiceBox(FXCollections.observableArrayList("Size","Protocols","Ports"));
+        userGuideFile = new File("visualizer/src/main/resources/userGuide.txt");
 
     }
     @Override
@@ -67,30 +64,21 @@ public class App extends Application {
         initComponents(primaryStage);
 
         // Start Tab content
-        BorderPane startPane = new BorderPane();
         Label startLabel = new Label("Welcome to Packet Analyzer Tool");
         startLabel.setFont(new Font("Arial", 30));
-        stopButton.setOnAction(new EventHandler<ActionEvent>() {
-                                   @Override
-                                   public void handle(ActionEvent event) {
-                                       // TODO call collector's stop method
-                                   }
-                               });
-        startPane.setTop(startLabel);
-        startPane.setCenter(stopButton);
 
         // Stats Tab content
         Label label = new Label("Select statistics");
         label.setFont(new Font("Arial", 30));
 
+        String[] charts = {"Size stats","Protocols stats","Ports stats"};
         BorderPane statsPane= new BorderPane();
         statsPane.setTop(label);
         statsPane.setCenter(statisticsChoiseBox);
-        statsPane.setBottom(openStatsButton);
 
 
         // Assign tabs content
-        Node[] tabContent = {startPane, realtimeButton, statsPane, userGuideButton};
+        Node[] tabContent = {startLabel, realtimeButton, statsPane, userGuideButton};
 
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -196,16 +184,9 @@ public class App extends Application {
                 statisticsChartStage.setTitle("New Stage");
                 statisticsChartStage.setScene(statisticsChartScene);
 
-                if (statisticsChoiseBox.getSelectionModel().getSelectedIndex()>0 ){
-                    StatisticChart pieChartSample = new PieChartSample();
-                    pieChartSample.start(statisticsChartStage);
-                    statisticsChartStage.show();
-                }
-                else{
-                    //TODO show medium packet size 
-                }
-
-
+                StatisticChart pieChartSample = new PieChartSample();
+                pieChartSample.start(statisticsChartStage);
+                statisticsChartStage.show();
             }
         });
     }

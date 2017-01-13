@@ -1,12 +1,12 @@
-package main.java.pl.edu.agh.iisg.to.visualizer.test;
+package pl.agh.edu.iisg.to.visualizer;
 
 import com.athaydes.automaton.FXApp;
 import com.athaydes.automaton.FXer;
 import javafx.scene.control.*;
-import main.java.pl.edu.agh.iisg.to.visualizer.src.App;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import pl.edu.agh.iisg.to.visualizer.App;
 
 import static com.athaydes.automaton.assertion.AutomatonMatcher.hasText;
 import static com.athaydes.automaton.selector.StringSelectors.matchingAny;
