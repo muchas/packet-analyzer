@@ -42,18 +42,18 @@ public class AppTest {
         assertThat( user.getAt(Label.class),hasText( "Welcome to Packet Analyzer Tool" ) );
     }
 
-    @Test
-    public void shouldDisplayTextOfUserGuideTest() {
-        System.out.println( "Running test" );
-        FXer user = FXer.getUserWith();
-
-        user.clickOn(matchingAny("type:Tab", "text:Help") );
-        assertThat( user.getAt( Button.class ), hasText( "User Guide" ) );
-
-        user.clickOn(matchingAny("type:Button", "text:User Guide") );
-        assertThat( user.getAt(TextArea.class),
-                hasText( "This is Sample User Guide.\n\nGot few lines....\n\n... but nothing worth seeing yet.\n" ) );
-    }
+//    @Test
+//    public void shouldDisplayTextOfUserGuideTest() {
+//        System.out.println( "Running test" );
+//        FXer user = FXer.getUserWith();
+//
+//        user.clickOn(matchingAny("type:Tab", "text:Help") );
+//        assertThat( user.getAt( Button.class ), hasText( "User Guide" ) );
+//
+//        user.clickOn(matchingAny("type:Button", "text:User Guide") );
+//        assertThat( user.getAt(TextArea.class),
+//                hasText( "This is Sample User Guide.\n\nGot few lines....\n\n... but nothing worth seeing yet.\n" ) );
+//    }
 
     @Test
     public void shouldFindChoiceBoxAfterClickOnStatisticsTest() {
