@@ -16,15 +16,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import java.io.*;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Suota on 2016-12-13.
  */
 public class App extends Application {
-
-    private Tab getCurrentTab() {
-        return ((Tab)(((TabPane)((BorderPane)root.getChildren().get(0)).getChildren().get(0)).getSelectionModel().getSelectedItem()));
-    }
 
     private String [] tabNames = {"Start", "Realtime Visualization", "Statistics", "Help" };
     Button realtimeButton;
@@ -33,6 +35,8 @@ public class App extends Application {
     ChoiceBox statisticsChoiseBox;
     File userGuideFile;
     Group root;
+    Queue liveLineChartQueue;
+    ExecutorService executor;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -105,6 +109,12 @@ public class App extends Application {
         primaryStage.show();
     }
 
+    public void addPacketToQueue (Map<String, Object> packet) {
+        if (liveLineChartQueue != null){
+            liveLineChartQueue.add(packet);
+        }
+    }
+
 
     private void initRealTimeButton() {
         realtimeButton.setFont(new Font("Arial", 20));
@@ -123,6 +133,25 @@ public class App extends Application {
                 LiveLineChart liveLineChart = new LiveLineChart();
                 liveLineChart.start(liveLineChartStage);
                 liveLineChartStage.show();
+                liveLineChartStage.setOnCloseRequest(event1 -> {
+                    try {
+                        //IT IS A PLACE TO STOP FILTER;
+                        executor.shutdownNow();
+                        Thread.sleep(500);
+                        liveLineChart.stop();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                executor = Executors.newCachedThreadPool(r -> {
+                    Thread thread = new Thread(r);
+                    thread.setDaemon(true);
+                    return thread;
+                });
+                liveLineChartQueue = liveLineChart.getQueueForPackets();
+                //IT IS A PLACE TO INFORM FILTER TO SEND PACKETS
+                AddToQueue addToQueue = new AddToQueue(liveLineChartQueue);
+                executor.execute(addToQueue);
             }
         });
     }
@@ -195,4 +224,29 @@ public class App extends Application {
         statisticsChoiseBox.setTooltip(new Tooltip("Select preferable statistics characteristic"));
     }
 
+    private Tab getCurrentTab() {
+        return ((Tab)(((TabPane)((BorderPane)root.getChildren().get(0)).getChildren().get(0)).getSelectionModel().getSelectedItem()));
+    }
+
+    private class AddToQueue implements Runnable {
+        public AddToQueue(Queue queue) {
+            this.liveLineChartQueue = queue;
+        }
+
+        Random random = new Random();
+        Queue liveLineChartQueue;
+
+        @Override
+        public void run() {
+            try {
+                Map<String, Object> packet = new HashMap<>();
+                packet.put("Size", random.nextInt(1518));
+                liveLineChartQueue.add(packet);
+                Thread.sleep(random.nextInt(300));
+                executor.execute(this);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(LiveLineChart.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
