@@ -13,6 +13,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
@@ -27,7 +30,7 @@ public class LiveLineChart extends Application {
     private XYChart.Series series;
     private ExecutorService executor;
     private AddToQueue addToQueue;
-    private ConcurrentLinkedQueue<Number> data = new ConcurrentLinkedQueue<Number>();
+    private ConcurrentLinkedQueue<Map<String, Object>> packetsQueue = new ConcurrentLinkedQueue<>();
 
     private NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
@@ -70,13 +73,19 @@ public class LiveLineChart extends Application {
         prepareTimeline();
     }
 
+    public Queue<Map<String,Object>> getQueueForPackets() {
+        return packetsQueue;
+    }
+
     private class AddToQueue implements Runnable {
         Random random = new Random();
 
         @Override
         public void run() {
             try {
-                data.add(random.nextInt(1518));
+                Map<String, Object> packet = new HashMap<>();
+                packet.put("Size", random.nextInt(1518));
+                packetsQueue.add(packet);
                 Thread.sleep(random.nextInt(300));
                 executor.execute(this);
             } catch (InterruptedException ex) {
@@ -96,8 +105,8 @@ public class LiveLineChart extends Application {
 
     private void addDataToSeries() {
         for (int i = 0; i < 20; i++) {
-            if (data.isEmpty()) break;
-            series.getData().add(new AreaChart.Data(xSeriesData++, data.remove()));
+            if (packetsQueue.isEmpty()) break;
+            series.getData().add(new AreaChart.Data(xSeriesData++, (Integer)packetsQueue.remove().get("Size")));
         }
 
         xAxis.setLowerBound(xSeriesData - MAX_DATA_POINTS > 0 ? xSeriesData - MAX_DATA_POINTS : 0);
