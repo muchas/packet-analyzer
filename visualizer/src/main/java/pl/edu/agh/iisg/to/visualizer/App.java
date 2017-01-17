@@ -72,6 +72,7 @@ public class App extends Application {
         BorderPane startPane = new BorderPane();
         Label startLabel = new Label("Welcome to Packet Analyzer Tool");
         startLabel.setFont(new Font("Arial", 30));
+        stopButton.setFont(new Font("Arial", 20));
         stopButton.setOnAction(new EventHandler<ActionEvent>() {
                                    @Override
                                    public void handle(ActionEvent event) {
