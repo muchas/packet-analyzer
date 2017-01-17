@@ -15,22 +15,15 @@ import java.util.concurrent.CountDownLatch;
 public class PieChartSample extends Application implements StatisticChart {
     public static final CountDownLatch latch = new CountDownLatch(1);
     public static PieChartSample pieChartSample = null;
-    private int amountOfTCP = 432;
-    private int amountOfUDP = 256;
+    PieChart chart;
+    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
-    ObservableList<PieChart.Data> pieChartData =
-            FXCollections.observableArrayList(
-                    new PieChart.Data("TCP", amountOfTCP),
-                    new PieChart.Data("UDP", amountOfUDP));
-
-    public void setAmountOfTCP(int amount) {
-        this.amountOfTCP = amount;
-        pieChartData.remove("TCP");
-        pieChartData.add(new PieChart.Data("TCP", amount));
+    public void setAmountForSet(String label, int amount) {
+        pieChartData.add(new PieChart.Data(label, amount));
     }
-
-    public void setAmountOfUDP(int amount) {
-        this.amountOfUDP = amount;
+    public void initChart(String t) {
+        chart = new PieChart(pieChartData);
+        chart.setTitle(t);
     }
 
     public static PieChartSample waitPieChartSample() {
@@ -51,21 +44,11 @@ public class PieChartSample extends Application implements StatisticChart {
         setPieChartSample(this);
     }
 
-    public void printSomething() {
-        System.out.println("You called a method on the application");
-    }
-
-
-
     @Override public void start(Stage stage) {
         Scene scene = new Scene(new Group());
         stage.setTitle("Statistics");
         stage.setWidth(500);
         stage.setHeight(500);
-
-
-        final PieChart chart = new PieChart(pieChartData);
-        chart.setTitle("Transport Layer Protocols Usage");
 
         ((Group) scene.getRoot()).getChildren().add(chart);
         stage.setScene(scene);
