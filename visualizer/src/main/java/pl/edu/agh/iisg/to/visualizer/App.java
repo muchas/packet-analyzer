@@ -19,7 +19,6 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,6 +36,7 @@ public class App extends Application {
     Group root;
     Queue liveLineChartQueue;
     ExecutorService executor;
+    Button stopButton;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -55,8 +55,9 @@ public class App extends Application {
         realtimeButton = new Button("RealTime Chart");
         openStatsButton = new Button ("View statistics");
         userGuideButton = new Button("User Guide");
-        statisticsChoiseBox = new ChoiceBox(FXCollections.observableArrayList("Size","Protocols","Ports"));
+        statisticsChoiseBox = new ChoiceBox(FXCollections.observableArrayList("Packet size","Protocols","Destination ports"));
         userGuideFile = new File("visualizer/src/main/resources/userGuide.txt");
+        stopButton = new Button("STOP");
 
     }
     @Override
@@ -68,8 +69,18 @@ public class App extends Application {
         initComponents(primaryStage);
 
         // Start Tab content
+        BorderPane startPane = new BorderPane();
         Label startLabel = new Label("Welcome to Packet Analyzer Tool");
         startLabel.setFont(new Font("Arial", 30));
+        stopButton.setOnAction(new EventHandler<ActionEvent>() {
+                                   @Override
+                                   public void handle(ActionEvent event) {
+
+                                       // TODO call collector's stop method
+                                   }
+                               });
+        startPane.setTop(startLabel);
+        startPane.setCenter(stopButton);
 
         // Stats Tab content
         Label label = new Label("Select statistics");
@@ -79,10 +90,10 @@ public class App extends Application {
         BorderPane statsPane= new BorderPane();
         statsPane.setTop(label);
         statsPane.setCenter(statisticsChoiseBox);
-
+        statsPane.setBottom(openStatsButton);
 
         // Assign tabs content
-        Node[] tabContent = {startLabel, realtimeButton, statsPane, userGuideButton};
+        Node[] tabContent = {startPane, realtimeButton, statsPane, userGuideButton};
 
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
@@ -204,6 +215,9 @@ public class App extends Application {
         openStatsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Map statisticsMap = new HashMap<String,String>();
+                //TODO call get() from filter's Statistics and use map's values to setup charts
+
                 Label statisticsChartLabel = new Label("Statistics Chart");
                 StackPane secondaryLayout = new StackPane();
                 secondaryLayout.getChildren().add(statisticsChartLabel);
@@ -213,10 +227,32 @@ public class App extends Application {
                 statisticsChartStage.setTitle("New Stage");
                 statisticsChartStage.setScene(statisticsChartScene);
 
-                StatisticChart pieChartSample = new PieChartSample();
-                pieChartSample.start(statisticsChartStage);
-                statisticsChartStage.show();
-            }
+                if(statisticsChoiseBox.getSelectionModel().getSelectedIndex()==0) {
+                    BarChartSample barChartSample = new BarChartSample();
+                    barChartSample.init();
+                    barChartSample.setData("min", 20);
+                    barChartSample.setData("average", 200);
+                    barChartSample.setData("max", 500);
+                    barChartSample.start(statisticsChartStage);
+                    statisticsChartStage.show();
+                }
+                if(statisticsChoiseBox.getSelectionModel().getSelectedIndex()==1) {
+                    PieChartSample protocolsPieChart = new PieChartSample();
+                    protocolsPieChart.setAmountForSet("TCP", 300);
+                    protocolsPieChart.setAmountForSet("UDP", 500);
+                    protocolsPieChart.initChart("Transport Layer Protocols Usage");
+                    protocolsPieChart.start(statisticsChartStage);
+                    statisticsChartStage.show();
+                }
+                if(statisticsChoiseBox.getSelectionModel().getSelectedIndex()==2) {
+                    PieChartSample portsPieChart = new PieChartSample();
+                    portsPieChart.setAmountForSet("8080", 200);
+                    portsPieChart.setAmountForSet("80", 100);
+                    portsPieChart.initChart("Destination Ports Usage");
+                    portsPieChart.start(statisticsChartStage);
+                    statisticsChartStage.show();
+                }
+                }
         });
     }
 

@@ -10,11 +10,19 @@ import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 
 public class BarChartSample extends Application implements StatisticChart {
-    final static String class1 = "Class A";
-    final static String class2 = "Class B";
-    final static String class3 = "Class C";
+
+    private XYChart.Series series;
+
+    public void setData(String label, int amount) {
+        series.getData().add(new XYChart.Data(label, amount));
+    }
+
+    @Override public void init() {
+        series = new XYChart.Series();
+    }
 
     @Override public void start(Stage stage) {
+
         stage.setTitle("Bar Chart Sample");
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
@@ -22,14 +30,9 @@ public class BarChartSample extends Application implements StatisticChart {
         int sceneWidth = 800;
         int sceneHeight = 600;
         bc.setCategoryGap(sceneWidth/6);
-        bc.setTitle("IP Class Segregation");
+        bc.setTitle("Ports Segregation");
         xAxis.setLabel("Class");
         yAxis.setLabel("Value");
-
-        XYChart.Series series = new XYChart.Series();
-        series.getData().add(new XYChart.Data(class1, 764));
-        series.getData().add(new XYChart.Data(class2, 855));
-        series.getData().add(new XYChart.Data(class3, 345));
 
         Scene scene  = new Scene(bc,sceneWidth,sceneHeight);
         bc.getData().addAll(series);
