@@ -37,6 +37,7 @@ public class App extends Application {
     Queue liveLineChartQueue;
     ExecutorService executor;
     Button stopButton;
+    LiveLineChartState liveLineChartState = LiveLineChartState.NOT_WORKING;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -127,6 +128,10 @@ public class App extends Application {
         }
     }
 
+    public LiveLineChartState getLiveLineChartStatus() {
+        return liveLineChartState;
+    }
+
 
     private void initRealTimeButton() {
         realtimeButton.setFont(new Font("Arial", 20));
@@ -147,7 +152,7 @@ public class App extends Application {
                 liveLineChartStage.show();
                 liveLineChartStage.setOnCloseRequest(event1 -> {
                     try {
-                        //IT IS A PLACE TO STOP FILTER;
+                        liveLineChartState = LiveLineChartState.NOT_WORKING;
                         executor.shutdownNow();
                         Thread.sleep(500);
                         liveLineChart.stop();
@@ -161,7 +166,7 @@ public class App extends Application {
                     return thread;
                 });
                 liveLineChartQueue = liveLineChart.getQueueForPackets();
-                //IT IS A PLACE TO INFORM FILTER TO SEND PACKETS
+                liveLineChartState = LiveLineChartState.WORKING;
                 AddToQueue addToQueue = new AddToQueue(liveLineChartQueue);
                 executor.execute(addToQueue);
             }
