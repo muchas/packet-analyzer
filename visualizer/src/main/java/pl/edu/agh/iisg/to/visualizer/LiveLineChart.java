@@ -13,6 +13,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import pl.edu.agh.iisg.to.collector.Packet;
 
 import java.util.Map;
 import java.util.Queue;
@@ -23,7 +24,7 @@ public class LiveLineChart extends Application {
     private int xSeriesData = 0;
     private int MAX_DATA_POINTS = 100;
     private XYChart.Series series;
-    private ConcurrentLinkedQueue<Map<String, Object>> packetsQueue = new ConcurrentLinkedQueue<>();
+    private ConcurrentLinkedQueue<Packet> packetsQueue = new ConcurrentLinkedQueue<>();
     private NumberAxis xAxis = new NumberAxis();
     final NumberAxis yAxis = new NumberAxis();
     final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(xAxis, yAxis);
@@ -69,8 +70,8 @@ public class LiveLineChart extends Application {
         animationTimer.stop();
     }
 
-    protected Queue<Map<String, Object>> getQueueForPackets() {
-        return packetsQueue;
+    protected void addPacket (Packet packet) {
+        packetsQueue.add(packet);
     }
 
     private void prepareTimeline() {
@@ -80,7 +81,7 @@ public class LiveLineChart extends Application {
     private void addDataToSeries() {
         for (int i = 0; i < 20; i++) {
             if (packetsQueue.isEmpty()) break;
-            series.getData().add(new AreaChart.Data(xSeriesData++, (Integer) packetsQueue.remove().get("Size")));
+            series.getData().add(new AreaChart.Data(xSeriesData++, (Integer) packetsQueue.remove().getProperty("length").getValue()));
         }
         xAxis.setLowerBound(xSeriesData - MAX_DATA_POINTS > 0 ? xSeriesData - MAX_DATA_POINTS : 0);
         xAxis.setUpperBound(xSeriesData - 1 > MAX_DATA_POINTS ? xSeriesData - 1 : MAX_DATA_POINTS);
