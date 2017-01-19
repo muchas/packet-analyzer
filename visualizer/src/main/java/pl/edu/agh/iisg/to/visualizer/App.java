@@ -11,24 +11,27 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pl.edu.agh.iisg.to.collector.Packet;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Created by Suota on 2016-12-13.
  */
 public class App extends Application {
 
+    private App() {}
+
+    private App instance;
     private String [] tabNames = {"Start", "Realtime Visualization", "Statistics", "Help" };
     Button realtimeButton;
     Button openStatsButton;
@@ -36,16 +39,22 @@ public class App extends Application {
     ChoiceBox statisticsChoiseBox;
     File userGuideFile;
     Group root;
-    Queue liveLineChartQueue;
     ExecutorService executor;
     Button stopButton;
     LiveLineChartState liveLineChartState = LiveLineChartState.NOT_WORKING;
     Scene scene;
+    LiveLineChart liveLineChart;
 
     public static void main(String[] args) {
         Application.launch(args);
     }
 
+    public synchronized App getInstance() {
+        if (instance == null) {
+            instance = new App();
+        }
+        return instance;
+    }
 
     private void initComponents(Stage primaryStage) {
         initRealTimeButton();
@@ -126,8 +135,8 @@ public class App extends Application {
     }
 
     public void addPacketToQueue (Packet packet) {
-        if (liveLineChartQueue != null){
-            liveLineChartQueue.add(packet);
+        if (liveLineChartState == LiveLineChartState.WORKING){
+            liveLineChart.addPacket(packet);
         }
     }
 
@@ -150,7 +159,7 @@ public class App extends Application {
                 liveLineChartStage.setTitle("New Stage");
                 liveLineChartStage.setScene(liveLineChartScene);
 
-                LiveLineChart liveLineChart = new LiveLineChart();
+                liveLineChart = new LiveLineChart();
                 liveLineChart.start(liveLineChartStage);
                 liveLineChartStage.show();
                 liveLineChartStage.setOnCloseRequest(event1 -> {
@@ -163,15 +172,7 @@ public class App extends Application {
                         e.printStackTrace();
                     }
                 });
-                executor = Executors.newCachedThreadPool(r -> {
-                    Thread thread = new Thread(r);
-                    thread.setDaemon(true);
-                    return thread;
-                });
-                liveLineChartQueue = liveLineChart.getQueueForPackets();
                 liveLineChartState = LiveLineChartState.WORKING;
-                AddToQueue addToQueue = new AddToQueue(liveLineChartQueue);
-                executor.execute(addToQueue);
             }
         });
     }
@@ -271,27 +272,5 @@ public class App extends Application {
 
     private Tab getCurrentTab() {
         return ((Tab)(((TabPane)((BorderPane)root.getChildren().get(0)).getChildren().get(0)).getSelectionModel().getSelectedItem()));
-    }
-
-    private class AddToQueue implements Runnable {
-        public AddToQueue(Queue queue) {
-            this.liveLineChartQueue = queue;
-        }
-
-        Random random = new Random();
-        Queue liveLineChartQueue;
-
-        @Override
-        public void run() {
-            try {
-                Map<String, Object> packet = new HashMap<>();
-                packet.put("Size", random.nextInt(1518));
-                liveLineChartQueue.add(packet);
-                Thread.sleep(random.nextInt(300));
-                executor.execute(this);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(LiveLineChart.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
 }

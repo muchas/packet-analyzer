@@ -44,7 +44,8 @@ public class PieChartSample extends Application implements StatisticChart {
         setPieChartSample(this);
     }
 
-    @Override public void start(Stage stage) {
+    @Override
+    public void start(Stage stage) {
         Scene scene = new Scene(new Group());
         stage.setTitle("Statistics");
         stage.setWidth(500);
