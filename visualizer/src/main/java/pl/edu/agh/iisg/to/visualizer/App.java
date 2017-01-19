@@ -29,6 +29,9 @@ import java.util.concurrent.ExecutorService;
  */
 public class App extends Application {
 
+    private App() {}
+
+    App instance;
     private String [] tabNames = {"Start", "Realtime Visualization", "Statistics", "Help" };
     Button realtimeButton;
     Button openStatsButton;
@@ -46,6 +49,12 @@ public class App extends Application {
         Application.launch(args);
     }
 
+    public App getInstance() {
+        if (instance == null) {
+            instance = new App();
+        }
+        return instance;
+    }
 
     private void initComponents(Stage primaryStage) {
         initRealTimeButton();
