@@ -38,6 +38,7 @@ public class App extends Application {
     ExecutorService executor;
     Button stopButton;
     LiveLineChartState liveLineChartState = LiveLineChartState.NOT_WORKING;
+    Scene scene;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -66,7 +67,7 @@ public class App extends Application {
         init();
         primaryStage.setTitle("Packet Analyzer");
         root = new Group();
-        Scene scene = new Scene(root, 500, 300, Color.DARKGREY);
+        scene = new Scene(root, 500, 300, Color.DARKGREY);
         initComponents(primaryStage);
 
         // Start Tab content
@@ -120,6 +121,10 @@ public class App extends Application {
         primaryStage.setScene(scene);
         primaryStage.setOnCloseRequest(e -> Platform.exit());
         primaryStage.show();
+    }
+
+    public Scene getMyScene() {
+        return scene;
     }
 
     public void addPacketToQueue (Map<String, Object> packet) {
