@@ -1,48 +1,76 @@
-package src.main.java.pl.edu.agh.iisg.to.collector.src;
-import net.sourceforge.jpcap.capture.*;
-import java.lang.*;
+package pl.edu.agh.iisg.to.collector.src;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+
+import org.jnetpcap.*;
+import org.jnetpcap.nio.JBuffer;
+import org.jnetpcap.nio.JMemory;
 
 public class EventPacketCapture {
-    private static final int INFINITE = -1;
-    private static final int PACKET_COUNT = INFINITE;
 
-    // BPF filter for capturing any packet
-    private static final String FILTER = "";
+    private PcapIf device;
+    private Pcap pcap;
+    private List<PcapIf> alldevs;
+    private StringBuilder errbuf;
 
-    private PacketCapture m_pcap;
-    private String m_device;
+    public void start() {
+        JBuffer buf = new JBuffer(JMemory.POINTER);
+        int snaplen = 64 * 1024;           // Capture all packets, no trucation
+        int flags = Pcap.MODE_PROMISCUOUS; // capture all packets
+        int timeout = 10 * 1000;           // 10 seconds in millis
+        pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout, errbuf);
 
-    public EventPacketCapture() throws Exception {
-        // Step 1:  Instantiate Capturing Engine
-        m_pcap = new PacketCapture();
+        if (pcap == null) {
+            System.err.printf("Error while opening device for capture: "
+                    + errbuf.toString());
+            return;
+        }
 
-/*
-        System.out.print(m_pcap.lookupDevices());
-        Step 2:  Check for devices
-        */
+        JBufferHandler<String> handler = new JBufferHandler<String>() {
+            public void nextPacket(PcapHeader header, JBuffer buffer, String user) {
+                System.out.println("size of packet is=" + buffer.size());
+            }
+        };
 
-        m_device = m_pcap.findDevice();
-
-        // Step 3:  Open Device for Capturing (requires root)
-        m_pcap.open(m_device, true);
-
-        // Step 4:  Add a BPF Filter (see tcpdump documentation)
-        m_pcap.setFilter(FILTER, true);
-
-        // Step 5:  Register a Listener for Raw Packets
-        m_pcap.addRawPacketListener(new RawPacketHandler());
-
-        // Step 6:  Capture Data (max. PACKET_COUNT packets)
-        m_pcap.capture(PACKET_COUNT);
+        pcap.loop(Pcap.LOOP_INFINITE, new PacketHandler(), "jnetPcap");
+        pcap.close();
     }
 
-    public static void main(String[] args) {
-        try {
-            EventPacketCapture eventPacketCapture= new EventPacketCapture();
-        } catch(Exception e) {
-            e.printStackTrace();
-            System.exit(1);
+    public void stop() {
+        pcap.breakloop();
+        pcap.close();
+    }
+
+    public List<PcapIf> getDevicesList() {
+        return alldevs;
+    }
+
+    public void printDevicesList() {
+        System.out.println("Network devices found:");
+
+        int i = 0;
+        for (PcapIf device : this.alldevs) {
+            System.out.printf("#%d: %s [%s]\n", i++, device.getName(), device
+                    .getDescription());
         }
     }
 
+    public void setDevice(PcapIf device) {
+        this.device = device;
+    }
+
+    public EventPacketCapture() {
+        this.alldevs = new ArrayList<PcapIf>(); // Will be filled with NICs
+        this.errbuf = new StringBuilder();
+
+        int r = Pcap.findAllDevs(this.alldevs, this.errbuf);
+        if (r == Pcap.NOT_OK || this.alldevs.isEmpty()) {
+            System.err.printf("Can't read list of devices, error is %s", errbuf
+                    .toString());
+            return;
+        }
+    }
 }
