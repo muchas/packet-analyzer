@@ -14,5 +14,11 @@
     <artifactId>collector</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependency>
+        <groupId>jnetpcap</groupId>
+        <artifactId>jnetpcap</artifactId>
+        <version>1.4.r1425-1f</version>
+    </dependency>
+
     
 </project>
