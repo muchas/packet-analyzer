@@ -92,7 +92,7 @@ public class FilterListView extends BaseView {
 
             EventPacketCapture collector = new EventPacketCapture();
             collector.start();
-            
+
             App visualizerApp = new App();
             visualizerApp.start(stage);
 
