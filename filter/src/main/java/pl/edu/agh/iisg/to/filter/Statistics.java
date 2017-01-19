@@ -1,5 +1,7 @@
 package pl.edu.agh.iisg.to.filter;
 
+import pl.edu.agh.iisg.to.collector.Packet;
+
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,6 +1,7 @@
 package pl.edu.agh.iisg.to.filter.views;
 
 
+import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,7 +12,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+import pl.edu.agh.iisg.to.collector.EventPacketCapture;
+import pl.edu.agh.iisg.to.filter.*;
 import pl.edu.agh.iisg.to.filter.entities.Filter;
+import pl.edu.agh.iisg.to.visualizer.App;
 
 
 public class FilterListView extends BaseView {
@@ -26,6 +30,7 @@ public class FilterListView extends BaseView {
     private Button createButton;
     private Button editButton;
     private Button deleteButton;
+    private Button runButton;
 
     private ObservableList<Filter> filters;
 
@@ -80,6 +85,24 @@ public class FilterListView extends BaseView {
         deleteButton = new Button();
         deleteButton.setText("Usun");
         deleteButton.setOnAction(event -> System.out.println("Hello World 3!"));
+
+        runButton = new Button();
+        runButton.setText("Uruchom");
+        runButton.setOnAction(event -> {
+
+            EventPacketCapture collector = new EventPacketCapture();
+            collector.start();
+            
+            App visualizerApp = new App();
+            visualizerApp.start(stage);
+
+            FilteringContext context = new FilteringContext(filters);
+            FilterApplier filterApplier = new FilterApplier(filters, context);
+            Statistics statistics = new Statistics();
+
+            PacketConsumer consumer = new PacketConsumer(filterApplier, statistics, visualizerApp);
+            consumer.execute();
+        });
     }
 
     private void initializePanes() {
@@ -87,7 +110,7 @@ public class FilterListView extends BaseView {
         centerPane.getChildren().add(listView);
 
         HBox hb = new HBox();
-        hb.getChildren().addAll(createButton, editButton, deleteButton);
+        hb.getChildren().addAll(createButton, editButton, deleteButton, runButton);
 
         TilePane bottomPane = new TilePane();
         bottomPane.setPadding(new Insets(10, 10, 10, 10));

@@ -1,4 +1,6 @@
 package pl.edu.agh.iisg.to.filter;
+import pl.edu.agh.iisg.to.collector.Packet;
+
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -6,9 +8,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class PacketBuffer implements PacketProcessingQueue {
 
     private Queue<Packet> packetQueue;
+    private static PacketBuffer instance = null;
 
-    PacketBuffer() {
+    private PacketBuffer() {
         this.packetQueue = new ConcurrentLinkedQueue<>();
+    }
+
+    public static PacketBuffer getInstance() {
+        if(instance == null) {
+            instance = new PacketBuffer();
+        }
+        return instance;
     }
 
     @Override

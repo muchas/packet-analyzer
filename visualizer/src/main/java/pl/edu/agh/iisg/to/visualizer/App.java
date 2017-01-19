@@ -15,6 +15,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import pl.edu.agh.iisg.to.collector.Packet;
+
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -123,11 +125,7 @@ public class App extends Application {
         primaryStage.show();
     }
 
-    public Scene getMyScene() {
-        return scene;
-    }
-
-    public void addPacketToQueue (Map<String, Object> packet) {
+    public void addPacketToQueue (Packet packet) {
         if (liveLineChartQueue != null){
             liveLineChartQueue.add(packet);
         }

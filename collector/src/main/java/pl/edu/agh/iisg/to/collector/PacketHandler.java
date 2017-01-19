@@ -7,6 +7,7 @@ import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.protocol.lan.Ethernet;
 import org.jnetpcap.protocol.network.*;
 import org.jnetpcap.protocol.tcpip.*;
+import pl.edu.agh.iisg.to.filter.PacketBuffer;
 
 
 public class PacketHandler implements PcapPacketHandler {
@@ -122,6 +123,7 @@ public class PacketHandler implements PcapPacketHandler {
 
 //        System.out.println("*******************************************************");
 
+        PacketBuffer.getInstance().push(p);
     }
 
 }

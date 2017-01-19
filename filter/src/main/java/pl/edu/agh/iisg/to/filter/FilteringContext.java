@@ -1,5 +1,6 @@
 package pl.edu.agh.iisg.to.filter;
 
+import pl.edu.agh.iisg.to.collector.Packet;
 import pl.edu.agh.iisg.to.filter.entities.Filter;
 
 import javax.script.ScriptException;

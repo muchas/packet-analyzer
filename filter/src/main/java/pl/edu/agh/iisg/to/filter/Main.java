@@ -28,14 +28,5 @@ public class Main extends Application {
 
         primaryStage.setTitle("Packet Analyzer Filter");
         primaryStage.show();
-
-
-        FilteringContext context = new FilteringContext(filters);
-        PacketProcessingQueue buffer = new PacketBuffer();
-        FilterApplier filterApplier = new FilterApplier(filters, context);
-        Statistics statistics = new Statistics();
-
-        PacketConsumer consumer = new PacketConsumer(buffer, filterApplier, statistics);
-        consumer.execute();
     }
 }
