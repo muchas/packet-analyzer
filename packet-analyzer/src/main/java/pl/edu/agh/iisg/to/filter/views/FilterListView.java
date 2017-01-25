@@ -120,7 +120,7 @@ public class FilterListView extends BaseView {
                 public void run() {
                     FilteringContext context = new FilteringContext(filters);
                     FilterApplier filterApplier = new FilterApplier(filters, context);
-                    Statistics statistics = new Statistics();
+                    Statistics statistics = Statistics.getInstance();
 
                     PacketConsumer consumer = new PacketConsumer(filterApplier, statistics);
                     System.out.println("Starting packet consumer...");
