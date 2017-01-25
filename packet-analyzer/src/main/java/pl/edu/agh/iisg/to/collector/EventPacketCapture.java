@@ -20,6 +20,7 @@ public class EventPacketCapture {
         for(PcapIf device: alldevs) {
             new Thread(new Runnable() {
                 public void run() {
+                    System.out.printf(device.getName());
                     JBuffer buf = new JBuffer(JMemory.POINTER);
                     int snaplen = 64 * 1024;           // Capture all packets, no trucation
                     int flags = Pcap.MODE_PROMISCUOUS; // capture all packets
