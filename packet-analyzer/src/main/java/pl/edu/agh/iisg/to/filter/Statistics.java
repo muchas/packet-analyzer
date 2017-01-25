@@ -23,7 +23,7 @@ public class Statistics {
 
         values.put("averageLength", 0);
         values.put("maxLength", 0);
-        values.put("minLength", 0);
+        values.put("minLength", 200000000);
         values.put("packetCount", 0);
         values.put("packetSizeSum", 0);
     }
