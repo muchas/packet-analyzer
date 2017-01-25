@@ -26,6 +26,8 @@ public class Statistics {
         values.put("minLength", 200000000);
         values.put("packetCount", 0);
         values.put("packetSizeSum", 0);
+        values.put("udpPacketCount", 0);
+        values.put("tcpPacketCount", 0);
     }
 
     public void update(Packet packet) {
@@ -37,6 +39,14 @@ public class Statistics {
         values.put("averageLength", values.get("packetSizeSum") / values.get("packetCount"));
         values.put("maxLength", Math.max(values.get("maxLength"), length));
         values.put("minLength", Math.min(values.get("minLength"), length));
+
+        if(packet.getPacketProperties().containsKey("udp")) {
+            values.put("udpPacketCount", values.get("udpPacketCount") + 1);
+        }
+
+        if(packet.getPacketProperties().containsKey("tcp")) {
+            values.put("tcpPacketCount", values.get("tcpPacketCount") + 1);
+        }
     }
 
     public Map<String, Integer> get() {
