@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pl.edu.agh.iisg.to.collector.Packet;
+import pl.edu.agh.iisg.to.filter.Statistics;
 
 import java.io.*;
 import java.util.HashMap;
@@ -226,8 +227,7 @@ public class App extends Application {
         openStatsButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Map statisticsMap = new HashMap<String,String>();
-                //TODO call get() from filter's Statistics and use map's values to setup charts
+                Map statisticsMap = Statistics.getInstance().get();
 
                 Label statisticsChartLabel = new Label("Statistics Chart");
                 StackPane secondaryLayout = new StackPane();
@@ -241,24 +241,24 @@ public class App extends Application {
                 if(statisticsChoiseBox.getSelectionModel().getSelectedIndex()==0) {
                     BarChartSample barChartSample = new BarChartSample();
                     barChartSample.init();
-                    barChartSample.setData("min", 20);
-                    barChartSample.setData("average", 200);
-                    barChartSample.setData("max", 500);
+                    barChartSample.setData("minLength", (int) statisticsMap.get("minLength"));
+                    barChartSample.setData("averageLength", (int) statisticsMap.get("avarageLength"));
+                    barChartSample.setData("maxLength", (int) statisticsMap.get("maxLength"));
                     barChartSample.start(statisticsChartStage);
                     statisticsChartStage.show();
                 }
                 if(statisticsChoiseBox.getSelectionModel().getSelectedIndex()==1) {
                     PieChartSample protocolsPieChart = new PieChartSample();
                     protocolsPieChart.setAmountForSet("TCP", 300);
-                    protocolsPieChart.setAmountForSet("UDP", 500);
+                    protocolsPieChart.setAmountForSet("UDP", 200 );
                     protocolsPieChart.initChart("Transport Layer Protocols Usage");
                     protocolsPieChart.start(statisticsChartStage);
                     statisticsChartStage.show();
                 }
                 if(statisticsChoiseBox.getSelectionModel().getSelectedIndex()==2) {
                     PieChartSample portsPieChart = new PieChartSample();
-                    portsPieChart.setAmountForSet("8080", 200);
-                    portsPieChart.setAmountForSet("80", 100);
+                    portsPieChart.setAmountForSet("8080", 472);
+                    portsPieChart.setAmountForSet("80", 213);
                     portsPieChart.initChart("Destination Ports Usage");
                     portsPieChart.start(statisticsChartStage);
                     statisticsChartStage.show();
