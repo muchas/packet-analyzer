@@ -8,15 +8,19 @@ import java.util.List;
 public class FilterApplier {
 
     private FilteringContext context;
-    private List<Filter> activeFilters;
+    private List<Filter> filters;
 
-    public FilterApplier(List<Filter> activeFilters, FilteringContext context) {
-        this.activeFilters = activeFilters;
+    public FilterApplier(List<Filter> filters, FilteringContext context) {
+        this.filters = filters;
         this.context = context;
     }
 
     boolean apply(Packet packet) {
-        for (Filter filter: activeFilters) {
+        for (Filter filter: filters) {
+            if(!filter.getIsActive()) {
+                continue;
+            }
+
             try {
                 if(!context.apply(filter, packet)) return false;
             } catch (Exception e) {

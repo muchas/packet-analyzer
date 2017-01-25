@@ -5,9 +5,12 @@ import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.protocol.lan.Ethernet;
-import org.jnetpcap.protocol.network.*;
-import org.jnetpcap.protocol.tcpip.*;
-import pl.edu.agh.iisg.to.filter.PacketBuffer;
+import org.jnetpcap.protocol.network.Arp;
+import org.jnetpcap.protocol.network.Ip4;
+import org.jnetpcap.protocol.network.Ip6;
+import org.jnetpcap.protocol.tcpip.Http;
+import org.jnetpcap.protocol.tcpip.Tcp;
+import org.jnetpcap.protocol.tcpip.Udp;
 
 
 public class PacketHandler implements PcapPacketHandler {
@@ -123,7 +126,7 @@ public class PacketHandler implements PcapPacketHandler {
 
 //        System.out.println("*******************************************************");
 
-        PacketBuffer.getInstance().push(p);
+//        PacketBuffer.getInstance().push(p);
     }
 
 }

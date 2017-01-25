@@ -1,19 +1,26 @@
 package pl.edu.agh.iisg.to.filter.views;
 
 
-import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import pl.edu.agh.iisg.to.collector.EventPacketCapture;
-import pl.edu.agh.iisg.to.filter.*;
+import pl.edu.agh.iisg.to.filter.FilterApplier;
+import pl.edu.agh.iisg.to.filter.FilteringContext;
+import pl.edu.agh.iisg.to.filter.PacketConsumer;
+import pl.edu.agh.iisg.to.filter.Statistics;
 import pl.edu.agh.iisg.to.filter.entities.Filter;
 import pl.edu.agh.iisg.to.visualizer.App;
 
@@ -56,6 +63,17 @@ public class FilterListView extends BaseView {
     private void initializeListView() {
         listView = new ListView<Filter>(filters);
         listView.setPrefSize(550, 400);
+
+        listView.setCellFactory(CheckBoxListCell.forListView(new Callback<Filter, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(Filter filter) {
+                BooleanProperty observable = new SimpleBooleanProperty();
+                observable.addListener((obs, wasSelected, isNowSelected) -> {
+                    filter.setIsActive(isNowSelected);
+                });
+                return observable;
+            }
+        }));
     }
 
     private void initializeButtons() {
@@ -93,14 +111,13 @@ public class FilterListView extends BaseView {
             EventPacketCapture collector = new EventPacketCapture();
             collector.start();
 
-            App visualizerApp = new App();
-            visualizerApp.start(stage);
+            App.getInstance().start(stage);
 
             FilteringContext context = new FilteringContext(filters);
             FilterApplier filterApplier = new FilterApplier(filters, context);
             Statistics statistics = new Statistics();
 
-            PacketConsumer consumer = new PacketConsumer(filterApplier, statistics, visualizerApp);
+            PacketConsumer consumer = new PacketConsumer(filterApplier, statistics);
             consumer.execute();
         });
     }

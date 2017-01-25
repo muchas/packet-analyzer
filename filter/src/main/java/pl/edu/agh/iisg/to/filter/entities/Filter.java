@@ -1,6 +1,8 @@
 package pl.edu.agh.iisg.to.filter.entities;
 
 
+import javafx.beans.property.BooleanProperty;
+
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -9,6 +11,7 @@ import java.util.regex.Pattern;
 public class Filter {
     private String name;
     private String body;
+    private Boolean isActive;
 
     private static final Pattern HEADER_PATTERN = Pattern.compile("function (?<NAME>[A-z]+)\\(packet\\)");
 
@@ -33,11 +36,13 @@ public class Filter {
 
         this.name = extractFunctionName(lines[0]);
         this.body = String.join("\n", bodyLines);
+        this.isActive = false;
     }
 
     public Filter(String name, String body) {
         this.name = name;
         this.body = body;
+        this.isActive = false;
     }
 
     public String getCode() {
@@ -77,5 +82,13 @@ public class Filter {
                 functionBody,
                 "}"
         });
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 }

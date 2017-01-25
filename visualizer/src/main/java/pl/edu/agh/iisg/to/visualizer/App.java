@@ -31,7 +31,7 @@ public class App extends Application {
 
     private App() {}
 
-    private App instance;
+    private static App instance;
     private String [] tabNames = {"Start", "Realtime Visualization", "Statistics", "Help" };
     Button realtimeButton;
     Button openStatsButton;
@@ -49,7 +49,7 @@ public class App extends Application {
         Application.launch(args);
     }
 
-    public synchronized App getInstance() {
+    public static synchronized App getInstance() {
         if (instance == null) {
             instance = new App();
         }

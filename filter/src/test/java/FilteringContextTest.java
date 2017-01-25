@@ -1,6 +1,6 @@
 import org.junit.Test;
+import pl.edu.agh.iisg.to.collector.Packet;
 import pl.edu.agh.iisg.to.filter.FilteringContext;
-import pl.edu.agh.iisg.to.filter.Packet;
 import pl.edu.agh.iisg.to.filter.entities.Filter;
 
 import static org.junit.Assert.*;
@@ -35,8 +35,8 @@ public class FilteringContextTest {
         Filter filter = new Filter("func1", " if(packet.getProtocol() == 'ICMP') { return true; } return false;");
         context.add(filter);
 
-        Packet packet = new Packet("ICMP");
-        Packet packet2 = new Packet("TCP");
+        Packet packet = new Packet();
+        Packet packet2 = new Packet();
 
         assertTrue(context.apply(filter, packet));
         assertFalse(context.apply(filter, packet2));

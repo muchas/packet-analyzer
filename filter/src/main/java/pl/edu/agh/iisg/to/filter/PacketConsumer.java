@@ -8,18 +8,17 @@ public class PacketConsumer implements Consumer {
     private PacketProcessingQueue buffer;
     private FilterApplier filterApplier;
     private Statistics statistics;
-    private App visualizer;
 
-    public PacketConsumer(FilterApplier applier, Statistics statistics, App visualizer) {
+    public PacketConsumer(FilterApplier applier, Statistics statistics) {
         this.buffer = PacketBuffer.getInstance();
         this.filterApplier = applier;
         this.statistics = statistics;
-        this.visualizer = visualizer;
     }
 
     @Override
     public void execute() {
         Packet packet;
+        App visualizer = App.getInstance();
 
         while(!this.buffer.isEmpty()) {
 

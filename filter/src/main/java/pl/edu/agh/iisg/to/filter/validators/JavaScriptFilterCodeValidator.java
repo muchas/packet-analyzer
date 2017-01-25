@@ -3,8 +3,8 @@ package pl.edu.agh.iisg.to.filter.validators;
 
 
 
+import pl.edu.agh.iisg.to.collector.Packet;
 import pl.edu.agh.iisg.to.filter.JavaScriptEngine;
-import pl.edu.agh.iisg.to.filter.Packet;
 
 import javax.script.ScriptException;
 

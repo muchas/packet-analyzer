@@ -21,7 +21,7 @@ public class AppTest {
     @BeforeClass
     public static void setUp() throws Exception {
         System.out.println( "Launching Java App" );
-        FXApp.startApp( new App() );
+        FXApp.startApp(App.getInstance());
 
         System.out.println( "App has been launched" );
         // let the window open and show before running tests
