@@ -110,20 +110,31 @@ public class FilterListView extends BaseView {
 
             new Thread(new Runnable() {
                 public void run() {
+                    System.out.println("");
                     EventPacketCapture collector = new EventPacketCapture();
                     collector.start();
                 }
             }).start();
+            
+            new Thread(new Runnable() {
+                public void run() {
+                    FilteringContext context = new FilteringContext(filters);
+                    FilterApplier filterApplier = new FilterApplier(filters, context);
+                    Statistics statistics = new Statistics();
 
-            App.getInstance().start(stage);
+                    PacketConsumer consumer = new PacketConsumer(filterApplier, statistics);
+                    System.out.println("Starting packet consumer...");
+                    consumer.execute();
 
-            FilteringContext context = new FilteringContext(filters);
-            FilterApplier filterApplier = new FilterApplier(filters, context);
-            Statistics statistics = new Statistics();
+                }
+            }).start();
 
-            PacketConsumer consumer = new PacketConsumer(filterApplier, statistics);
-            System.out.println("Starting packet consumer...");
-            consumer.execute();
+            new Thread(new Runnable() {
+                public void run() {
+                    App.getInstance().start(stage);
+                }
+            }).start();
+
         });
     }
 
