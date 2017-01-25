@@ -20,21 +20,22 @@ public class PacketConsumer implements Consumer {
         Packet packet;
         App visualizer = App.getInstance();
 
-        while(!this.buffer.isEmpty()) {
+        while(true) {
+            while (!this.buffer.isEmpty()) {
+                packet = this.buffer.pop();
 
-            packet = this.buffer.pop();
+                if (!filterApplier.apply(packet)) {
+                    continue;
+                }
 
-            if(!filterApplier.apply(packet)) {
-                continue;
+                statistics.update(packet);
+
+
+                // push to visualizer's queue
+
+                System.out.println("Adding packet to visualizer's queue " + packet.getProperty("number"));
+                visualizer.addPacketToQueue(packet);
             }
-
-            statistics.update(packet);
-
-
-            // push to visualizer's queue
-
-            System.out.println("Adding packet to visualizer's queue " + packet.getProperty("number"));
-            visualizer.addPacketToQueue(packet);
         }
     }
 }
