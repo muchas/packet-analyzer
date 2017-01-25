@@ -115,7 +115,7 @@ public class FilterListView extends BaseView {
                     collector.start();
                 }
             }).start();
-            
+
             new Thread(new Runnable() {
                 public void run() {
                     FilteringContext context = new FilteringContext(filters);
@@ -129,12 +129,7 @@ public class FilterListView extends BaseView {
                 }
             }).start();
 
-            new Thread(new Runnable() {
-                public void run() {
-                    App.getInstance().start(stage);
-                }
-            }).start();
-
+            App.getInstance().start(stage);
         });
     }
 
