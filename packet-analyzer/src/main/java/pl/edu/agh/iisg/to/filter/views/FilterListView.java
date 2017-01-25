@@ -108,8 +108,12 @@ public class FilterListView extends BaseView {
         runButton.setText("Uruchom");
         runButton.setOnAction(event -> {
 
-//            EventPacketCapture collector = new EventPacketCapture();
-//            collector.start();
+            new Thread(new Runnable() {
+                public void run() {
+                    EventPacketCapture collector = new EventPacketCapture();
+                    collector.start();
+                }
+            }).start();
 
             App.getInstance().start(stage);
 
