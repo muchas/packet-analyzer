@@ -249,8 +249,8 @@ public class App extends Application {
                 }
                 if(statisticsChoiseBox.getSelectionModel().getSelectedIndex()==1) {
                     PieChartSample protocolsPieChart = new PieChartSample();
-                    protocolsPieChart.setAmountForSet("TCP", 300);
-                    protocolsPieChart.setAmountForSet("UDP", 200 );
+                    protocolsPieChart.setAmountForSet("TCP", (int) statisticsMap.get("tcpPacketCount"));
+                    protocolsPieChart.setAmountForSet("UDP", (int) statisticsMap.get("udpPacketCount"));
                     protocolsPieChart.initChart("Transport Layer Protocols Usage");
                     protocolsPieChart.start(statisticsChartStage);
                     statisticsChartStage.show();
