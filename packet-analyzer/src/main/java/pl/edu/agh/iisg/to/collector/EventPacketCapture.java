@@ -17,28 +17,32 @@ public class EventPacketCapture {
     private StringBuilder errbuf;
 
     public void start() {
-        this.device = alldevs.get(2);
+        for(PcapIf device: alldevs) {
+            new Thread(new Runnable() {
+                public void run() {
+                    JBuffer buf = new JBuffer(JMemory.POINTER);
+                    int snaplen = 64 * 1024;           // Capture all packets, no trucation
+                    int flags = Pcap.MODE_PROMISCUOUS; // capture all packets
+                    int timeout = 10 * 1000;           // 10 seconds in millis
+                    pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout, errbuf);
 
-        JBuffer buf = new JBuffer(JMemory.POINTER);
-        int snaplen = 64 * 1024;           // Capture all packets, no trucation
-        int flags = Pcap.MODE_PROMISCUOUS; // capture all packets
-        int timeout = 10 * 1000;           // 10 seconds in millis
-        pcap = Pcap.openLive(device.getName(), snaplen, flags, timeout, errbuf);
+                    if (pcap == null) {
+                        System.err.printf("Error while opening device for capture: "
+                                + errbuf.toString());
+                        return;
+                    }
 
-        if (pcap == null) {
-            System.err.printf("Error while opening device for capture: "
-                    + errbuf.toString());
-            return;
+                    JBufferHandler<String> handler = new JBufferHandler<String>() {
+                        public void nextPacket(PcapHeader header, JBuffer buffer, String user) {
+                            System.out.println("size of packet is=" + buffer.size());
+                        }
+                    };
+
+                    pcap.loop(Pcap.LOOP_INFINITE, new PacketHandler(), "jnetPcap");
+                    pcap.close();
+                }
+            }).start();
         }
-
-        JBufferHandler<String> handler = new JBufferHandler<String>() {
-            public void nextPacket(PcapHeader header, JBuffer buffer, String user) {
-                System.out.println("size of packet is=" + buffer.size());
-            }
-        };
-
-        pcap.loop(Pcap.LOOP_INFINITE, new PacketHandler(), "jnetPcap");
-        pcap.close();
     }
 
     public void stop() {
