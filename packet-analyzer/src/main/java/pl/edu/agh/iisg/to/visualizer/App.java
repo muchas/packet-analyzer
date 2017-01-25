@@ -242,7 +242,7 @@ public class App extends Application {
                     BarChartSample barChartSample = new BarChartSample();
                     barChartSample.init();
                     barChartSample.setData("minLength", (int) statisticsMap.get("minLength"));
-                    barChartSample.setData("averageLength", (int) statisticsMap.get("avarageLength"));
+                    barChartSample.setData("averageLength", (int) statisticsMap.get("averageLength"));
                     barChartSample.setData("maxLength", (int) statisticsMap.get("maxLength"));
                     barChartSample.start(statisticsChartStage);
                     statisticsChartStage.show();
