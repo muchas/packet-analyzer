@@ -122,6 +122,7 @@ public class FilterListView extends BaseView {
             Statistics statistics = new Statistics();
 
             PacketConsumer consumer = new PacketConsumer(filterApplier, statistics);
+            System.out.println("Starting packet consumer...");
             consumer.execute();
         });
     }

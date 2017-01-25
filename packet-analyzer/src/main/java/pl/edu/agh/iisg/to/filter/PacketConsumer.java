@@ -32,6 +32,8 @@ public class PacketConsumer implements Consumer {
 
 
             // push to visualizer's queue
+
+            System.out.println("Adding packet to visualizer's queue " + packet.getProperty("number"));
             visualizer.addPacketToQueue(packet);
         }
     }

@@ -24,6 +24,7 @@ public class PacketBuffer implements PacketProcessingQueue {
     @Override
     public void push(Packet packet) {
         packetQueue.add(packet);
+        System.out.println("Adding packet to PacketBuffer queue " + packet.getProperty("number"));
     }
 
     @Override

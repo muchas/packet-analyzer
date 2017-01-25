@@ -136,6 +136,7 @@ public class App extends Application {
 
     public void addPacketToQueue (Packet packet) {
         if (liveLineChartState == LiveLineChartState.WORKING){
+            System.out.println("Adding packet to liveLineChart " + packet.getProperty("number"));
             liveLineChart.addPacket(packet);
         }
     }
